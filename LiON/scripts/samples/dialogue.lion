@@ -1,0 +1,30 @@
+# Dialogue methods
+
+method how_are_you
+method im_good
+method yes
+
+# Defining the class
+class hey {
+    function %exec {
+        echo ?self.__name__ "<3 🦁!"
+    }
+
+    function %new (pathname) {
+        echo "Yo"
+        new node ?pathname hey
+    }
+
+    function %how_are_you {
+        echo "I'm fine, and you?"
+    }
+
+    function %im_good {
+        echo "Good to know. Do you like Node Oriented Programming?"
+    }
+
+    function %yes {
+        echo "So, say my name out loud!"
+    }
+}
+promote hey

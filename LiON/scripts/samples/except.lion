@@ -1,0 +1,8 @@
+exception ToasterInBathtub
+promote ToasterInBathtub
+
+try {
+    throw ToasterInBathtub "110V"
+} catch node:ToasterInBathtub tnbt {
+    echo "Oh noes!" [ ?tnbt.__rel__ ]
+}

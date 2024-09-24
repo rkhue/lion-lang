@@ -1,0 +1,49 @@
+# Establishing methods
+method talk
+method walk
+
+# Creating classes
+class person {
+    function %new (pathname) {
+        new node ?pathname person
+    }
+
+    function %exec {
+        echo "I'm" ?self.__name__
+    }
+}
+
+inherited teacher person {
+    function %new (pathname, subject) {
+        new node ?pathname teacher ?subject
+    }
+
+    function %exec {
+        echo I'm ?self.__name__ the ?self.__rel__ teacher
+    }
+
+    function %talk {
+        echo "Let's talk about" ?self.__rel__
+    }
+
+    function %walk (where) {
+        echo "Walking to ..." ?where
+    }
+}
+
+inherited student person {
+    function %new (pathname, item) {
+        new node ?pathname student ?item
+    }
+
+    function %talk {
+        echo "Fizzbuzz I have" ?item
+    }
+
+    function %walk (where) {
+        echo "I can't walk to" ?where "."
+    }
+}
+
+# promotes
+promote teacher; promote student

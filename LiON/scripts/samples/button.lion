@@ -1,0 +1,19 @@
+# Methods
+
+method press
+
+class button {
+    function %exec {
+        echo "I'm of color" ?self.__rel__
+    }
+
+    function %new (pathname, color) {
+        new node ?pathname ?color
+    }
+
+    function %press {
+        echo "Hello, World!" ?color
+    }
+}
+
+promote button

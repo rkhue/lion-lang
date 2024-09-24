@@ -1,0 +1,3 @@
+tqdm
+pygments
+prompt_toolkit

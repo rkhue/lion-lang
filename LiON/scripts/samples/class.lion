@@ -1,0 +1,11 @@
+class pneu {
+    function %exec {
+        echo 🪢😱🛞
+    }
+
+    function %new (pathname) {
+        new node ?pathname pneu
+    }
+}
+
+promote pneu

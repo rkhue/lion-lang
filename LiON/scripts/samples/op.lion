@@ -1,0 +1,15 @@
+operator mod (
+    type: 2,
+    proc: 8,
+    lam: [new lam (x, y) {
+        ?x % ?y
+    }]
+)
+
+operator ~= (
+    type: 2,
+    proc: ==,
+    lam: [new lam (x, y) {
+        equals ?x ?y
+    }]
+)

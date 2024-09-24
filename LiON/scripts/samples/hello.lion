@@ -1,0 +1,4 @@
+function hello {
+    echo Hello, [__name__] 🦁
+}
+hello

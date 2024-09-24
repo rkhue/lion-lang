@@ -1,0 +1,29 @@
+struct math {
+    var pi 3.14
+
+    function sum (x, y) {
+        ?x + ?y
+    }
+
+    function sub (x, y) {
+        ?x - ?y
+    }
+}
+
+struct person {
+    var name
+    var age
+    var likes
+
+    function hello {
+        echo hello!
+    }
+}
+
+constructor Person (pathname, age, likes) {
+    pack p [new person]
+    set p.name ?pathname
+    set p.age ?age
+    set p.likes ?likes
+    pop p
+}

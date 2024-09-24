@@ -1,0 +1,7 @@
+# Times tables using LiON
+
+each a [1 ~ 10] {
+    each b [1 ~ 10] {
+        echo ?a * ?b == [?a * ?b]
+    }
+}

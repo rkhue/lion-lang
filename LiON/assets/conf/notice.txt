@@ -1,0 +1,5 @@
+LiON Copyright (C) 2024 Felipe Fernandes (https://github.com/rkhue)
+*
+This program comes with ABSOLUTELY NO WARRANTY; for details `see LICENSE`
+This is free software, and you are welcome to redistribute it
+under certain conditions; For docs type `__doc__` or `help`

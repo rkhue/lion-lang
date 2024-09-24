@@ -1,0 +1,44 @@
+/*
+OBJECTIVE: Show the utility of repetition shortcuts.
+
+TASK 1: Generate a list `result` with 10 even numbers.
+
+TASK 2: From `result`, generate a list `filtered` with 
+        only numbers divisible by 3.
+*/
+
+
+
+/* -------------------------
+   | TASK 1 | 2 solutions. |
+   ------------------------- */
+
+# I. Simple solution, using `each`
+var result &()
+each num [1 ~ 10] {
+    push result [?num * 2]
+}
+
+# II. Using repetition shortcut, `iter`
+var result [
+    iter num [1 ~ 10] {?num * 2}
+]
+
+
+
+/* -------------------------
+   | TASK 2 | 2 solutions. |
+   ------------------------- */
+
+# I. Simple solution, using `each`
+var filtered &()
+each num ?result {
+    if [?num % 3 == 0] {
+        push filtered ?num
+    }
+}
+
+# II. Using repetition shortcut, `filter`
+var filtered [
+    filter num ?result {?num % 3 == 0}
+]

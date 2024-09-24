@@ -1,0 +1,26 @@
+/*
+Simple REPL for LiON
+Written in LiON
+*/
+
+import @std/strman.py
+
+protect final struct repl {
+    only function terminal {
+        while { true } {
+            var i [input "> "]
+
+            if [str.starts ?i "!exit"] {
+                break
+            }
+
+            var out [do [lex ?i]]
+
+            if [$ not ?out is none] {
+                echo Out: ?out
+            }
+        }
+    }
+}
+
+repl.terminal

@@ -1,0 +1,26 @@
+# Helper stuff
+
+function display (thing) {
+    info ["reg." + ?thing + ".__rel__"]
+}
+
+function get_std {
+    import from @std (
+        utils.py,
+        strman.py,
+        lorem.py,
+        lmath.py,
+        rand.py
+    )
+}
+
+function notice {
+    echo [__notice__] "\n*"
+    echo [version]
+}
+
+# Benchmarking
+lion @scripts/benchmark.lion -> (silent:on)
+
+# Greetings
+notice

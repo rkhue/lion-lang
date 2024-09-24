@@ -1,0 +1,23 @@
+# Benchmark struct
+
+struct bench {
+    conf __icon__ 📑
+
+    # First benchmark
+    function hello (n) {
+        timeit ?n {
+            echo hello
+        }
+    }
+
+    # Second benchmark
+    function fruit {
+        echo banana
+    }
+
+    function ftest (n) {
+        timeit ?n {
+            bench.fruit
+        }
+    }
+}

@@ -1,0 +1,13 @@
+class counter {
+    function %exec {
+        conf self.__rel__ [?self.__rel__ + 1]
+
+        return ?self.__rel__
+    }
+
+    function %new (pathname) {
+        new node ?pathname counter -1
+    }
+}
+
+promote counter

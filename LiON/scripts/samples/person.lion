@@ -1,0 +1,21 @@
+struct person {
+    conf __icon__ 🧑
+
+    var name
+    var age
+    var fruit
+}
+
+# Constructor
+constructor Person for person (name, age, fruit) {
+    # Fazendo packing
+    pack p [new person]
+
+    # Setting attributes
+    set p.name ?name
+    set p.age ?age
+    set p.fruit ?fruit
+
+    # Returning
+    ::p
+}

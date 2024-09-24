@@ -1,0 +1,8 @@
+# Script initializer for LiON shell
+# Runs the init.lion script
+
+# Register shell's dms
+dms.assign "@shell" [shell.shdir]
+
+# Normal init
+lion "@scripts/init.lion"

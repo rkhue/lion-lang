@@ -1,0 +1,11 @@
+class bolt {
+    function %exec {
+        echo ⚡ [self.__rel__]
+    }
+
+    function %new (pathname, value) {
+        new node ?pathname bolt ?value
+    }
+}
+
+promote bolt

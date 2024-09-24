@@ -1,0 +1,25 @@
+struct lights {
+    conf __rel__ on
+
+    function see {
+        if ?lights {
+            echo 💡
+        } else {
+            echo 🌑
+        }
+    }
+
+    function flip {
+        if ?lights {
+            echo "Turning off..."
+            set lights off
+            conf lights.__icon__ 🌑
+        } else {
+            echo "Turning on..."
+            set lights on
+            conf lights.__icon__ 💡
+        }
+    }
+}
+
+conf lights.__class__ variable

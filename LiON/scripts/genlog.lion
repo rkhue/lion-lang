@@ -1,0 +1,18 @@
+import @std/strman.py
+import @std/utils.py
+
+/*
+* Generate changelog templates for LiON's LLCC
+*/
+
+struct genlog {
+    final var template [load "@assets/templates/changelog_template.md"]
+    conf __icon__ 🗞️
+
+    function new (filename, description) {
+        write ?filename [
+            str.format ?genlog.template ?filename 
+        ]
+    }
+}
+

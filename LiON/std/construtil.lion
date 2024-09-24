@@ -1,0 +1,23 @@
+constructor fastsaber (pathname, code) {
+    new saber ?pathname {
+        each element ?__args__ {
+            do ?this.code_
+        }
+    } -> (code_: ?code)
+}
+
+constructor arithsaber (pathname, op, start) {
+    new saber ?pathname {
+        var s__ ?this.st
+        each element ?__args__ {
+            set s__ [?s__ ?this.op ?element]
+        }
+        ?s__
+    } -> (op: ?op, st: ?start)
+} 
+
+constructor syscom (pathname) {
+    new function ?pathname (args) {
+        sh ?this.__name__ ?args
+    }
+}
