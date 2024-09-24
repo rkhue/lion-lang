@@ -28,7 +28,7 @@ pip3 install -r requirements.txt
 
 Then, run the `console.py` python script with the command:
 ```bash
-python3 col_console.py
+python3 lionc.py -i
 ```
 
 *Have fun!* Now you are inside the interactive REPL for the language, the LiON shell or LSI, type in `linos` to see all nodes inside the tree
