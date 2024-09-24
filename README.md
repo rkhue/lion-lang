@@ -4,20 +4,20 @@
 
 <img src="./LiON/assets/img/readme/screenshot-lsi.png" alt="LiON LSI" height="100px">
 
-- Today, the interpreter is written in pure python, with the code being compiled first to JSON (LiON Compiled Format) then, read and executed by the parser, which, takes care of tree/node operations while also interacting with python.
+- Today, the interpreter is written in pure Python, with the code being compiled first to JSON (LiON Compiled Format) then, read and executed by the parser, which, takes care of tree/node operations while also interacting with python.
 
 
 ## Sample scripts and Documentation
 - LiON stores samples inside the [samples](./LiON/scripts/samples) directory `%/scripts/samples/`.
 
-- For the formal documentation (indev), please see [this file](./LiON/doc/liondoc.md)
+- For the formal documentation (indev), please see [this file](./LiON/assets/doc/liondoc.md)
 
 - For the LiON's Last Commit Changelog or (LLVC), see [this file](CHANGELOG.md)
 
 ## Installation
 First you got to clone this repository to a new installation folder using:
 ```bash
-git clone https://github.com/rkhue/lion.git
+git clone https://github.com/rkhue/lion-lang.git
 ```
 
 After that, go to the directory and make sure that all dependencies are installed:
