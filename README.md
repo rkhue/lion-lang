@@ -49,7 +49,7 @@ To update LiON to the latest version in the GitHub repo.
 - VSCode extension
 
 ## License
-This project is licensed under the [GNU-GPLv3](LICENSE). See this [notice](/LiON/assets/conf/notice.txt)
+This project is licensed under the [GNU-GPLv3](LICENSE). See this [notice](./LiON/assets/conf/notice.txt)
 
 ## Author and Copyright notice
 * LiON Copyright (C) 2024

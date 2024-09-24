@@ -3,9 +3,11 @@ import traceback
 import os
 
 
-# run initializer script
-init = loadRaw('./LiON/scripts/init.lion')
+# Run initializer script
 LiON = LiONStandard()
+
+# Make sure the shell is loading init from DMS
+init = loadRaw(LiON.dms.parse("@scripts/init.lion"))
 
 
 DMS_COLOR = (0, 189, 255)
