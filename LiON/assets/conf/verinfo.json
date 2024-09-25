@@ -1,7 +1,7 @@
 {
   "__name__": "version",
   "__class__": "version",
-  "__rel__": "1.26a",
+  "__rel__": "1.26b",
   "__for__": "Frajola",
   "__tag__": "Indev public-release",
   "__doc__": "Copyright (C) 2024 Felipe Fernandes"
