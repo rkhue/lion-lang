@@ -35,13 +35,15 @@ VARIABLE_LIKE = {VARIABLE, PARAMETER, SCOPE, TREE_CONFIG, DMS, REGISTRY}
 FUNCTION = "function"
 LAMBDA = "lambda"
 SABER = "saber"
+OVERLOAD = "overload"
 FUNCTION_LIKE = {FUNCTION, LAMBDA}
 
 
 # Constructor like
 DEFAULT_CONSTRUCTOR = "def_constructor"
+ANONYMOUS_CONSTRUCTOR = "anon_constructor"
 CONSTRUCTOR = "constructor"
-CONSTRUCTOR_LIKE = {DEFAULT_CONSTRUCTOR, CONSTRUCTOR, CLASS}
+CONSTRUCTOR_LIKE = {DEFAULT_CONSTRUCTOR, ANONYMOUS_CONSTRUCTOR, CONSTRUCTOR, CLASS}
 
 # Operator like
 DEFAULT_OPERATOR = "def_operator"
@@ -62,7 +64,7 @@ BUILTIN_LIKE = {BUILTIN, DEFAULT_CONSTRUCTOR, DEFAULT_OPERATOR, STATEMENT}
 NODE_CLASSES = Literal[
     "newable", "tree_conf", "stack", "registry", "exception",
     "def_constructor", "constructor", "alias", "version", "locale",
-    "dms", "scope",
+    "dms", "scope", "overload", "anon_constructor",
     "builtin", "variable", "parameter", "function", "method", "lambda", "saber"
 ]
 

@@ -107,6 +107,18 @@ class TreeManager(Scope):
         built = relative(*args, **kwargs, __rs__=restrictions)
         return args[0], built
 
+    @staticmethod
+    def new_from_anon_constructor(relative, args, kwargs, restrictions=None) -> tuple[str, dict[str, Any]]:
+        """
+        :param relative:
+        :param args:
+        :param kwargs:
+        :param restrictions:
+        :return: The first argument always is the pathname, then, the node built
+        """
+        built = relative(*args, **kwargs, __rs__=restrictions)
+        return built[NAME_ATTRIBUTE], built
+
     def new_from_constructor(self, constructor: dict[str, Any],
                              args, kwargs, restrictions=None) -> tuple[str, dict[str, Any]]:
         built: dict = self.exec_function(constructor, args, kwargs)
@@ -124,7 +136,11 @@ class TreeManager(Scope):
 
         class_ = constructor[CLASS_ATTRIBUTE]
         if class_ == DEFAULT_CONSTRUCTOR:
-            pathname, built = self.new_from_def_constructor(constructor[RELATIVE_ATTRIBUTE], args, kwargs, restrictions)
+            pathname, built = self.new_from_def_constructor(constructor[RELATIVE_ATTRIBUTE],
+                                                            args, kwargs, restrictions)
+        elif class_ == ANONYMOUS_CONSTRUCTOR:
+            pathname, built = self.new_from_anon_constructor(constructor[RELATIVE_ATTRIBUTE],
+                                                             args, kwargs, restrictions)
         elif class_ == CONSTRUCTOR:
             pathname, built = self.new_from_constructor(constructor, args, kwargs, restrictions)
         elif class_ == CLASS:
@@ -205,6 +221,16 @@ class TreeManager(Scope):
                               ARGUMENTS_ATTRIBUTE: args, KWARGS_ATTRIBUTE: kwargs})
         return self.parse_calls_direct(node[RELATIVE_ATTRIBUTE])
 
+    def exec_overload(self, node: dict[str, Any], args=(), kwargs: dict = None):
+        for k, v in node[RELATIVE_ATTRIBUTE].items():
+            if v[NAME_ATTRIBUTE] == "_":
+                continue
+            if len(v[ARGUMENTS_ATTRIBUTE]) == len(args) + len(kwargs):
+                return self.exec_function(v, args, kwargs)
+
+        if node.get("_"):
+            return self.exec_saber(node["_"], args, kwargs)
+
     @scoped("exec_method")
     def exec_method(self, method_name: str,
                     node: dict[str, Any], args: tuple = (),
@@ -272,6 +298,8 @@ class TreeManager(Scope):
             output = self.exec_saber(node, args, kwargs)
         elif node_class in FUNCTION_LIKE:
             output = self.exec_function(node, args, kwargs)
+        elif node_class == OVERLOAD:
+            output = self.exec_overload(node, args, kwargs)
         elif node_class in METHOD:
             assert len(args) > 0, "Cannot execute method without passing at least a pathname"
             node_pathname = args[0]

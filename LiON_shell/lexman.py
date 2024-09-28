@@ -23,7 +23,8 @@ class LiONLexer(RegexLexer):
              r'|catch|finally|push|extend|break|continue'
              r'|set|keysfrom|filter|return|cascade|protect|final|method'
              r'|only|global|local|nonlocal)\b', Keyword),
-            (r'\b(node|struct|class|inherited|var|alias|function|saber'
+            (r'\b(node|struct|class|overload'
+             r'|inherited|var|alias|function|saber'
              r'|lam|operator|constructor|string|tuple|list'
              r'|keyvalue|exception)\b',
              Keyword),

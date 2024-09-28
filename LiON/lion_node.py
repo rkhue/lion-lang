@@ -3,8 +3,8 @@ from LiON.lang.semantic import KEYWORD_DICTIONARY
 from LiON.exceptions import LiONException
 from LiON.lang.restrictions import *
 from LiON.lang.const import *
+from uuid import uuid4
 from typing import Any
-
 
 ITERABLE = tuple | list
 
@@ -142,6 +142,7 @@ def construct_node(name, class_: NODE_CLASSES = NEWABLE, relative=None, restrict
         RELATIVE_ATTRIBUTE: relative,
     }
 
+    assert name and class_, "Cannot make nodes with empty names / classes"
     assert isinstance(name, str), "Cannot make nodes with non-string names."
     assert isinstance(class_, str), "Cannot make nodes with non-string classes."
 
@@ -184,6 +185,12 @@ def construct_statement(name: str, func, **kwargs):
 
 def construct_def_constructor(name: str, for_class: str, func, **kwargs):
     node = construct_builtin(name, func, __class__=DEFAULT_CONSTRUCTOR, __for__=for_class, **kwargs)
+    return node
+
+
+def construct_anon_constructor(name: str, for_class: str, func, **kwargs):
+    node = construct_def_constructor(name, for_class, func, **kwargs)
+    node.update({CLASS_ATTRIBUTE: ANONYMOUS_CONSTRUCTOR})
     return node
 
 
@@ -238,7 +245,7 @@ def construct_constructor(name: str, args, code, **kwargs):
 
 
 def construct_lambda(args: list | tuple, code, **kwargs) -> dict[str, Any]:
-    built = construct_function("<lambda>", args, code, __class__=LAMBDA, **kwargs)
+    built = construct_function(uuid4().hex, args, code, __class__=LAMBDA, **kwargs)
     return built
 
 

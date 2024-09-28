@@ -148,13 +148,14 @@ class LiONBasic(TreeManager):
             "node": construct_def_constructor("node", NEWABLE, construct_node),
             "struct": construct_def_constructor("struct", NEWABLE, self.struct_def_constructor),
             "inherited": construct_def_constructor("inherited", INHERITED, self.inherited_def_constructor),
+            "overload": construct_def_constructor("overload", NEWABLE, self.overload_def_constructor),
             "method": construct_def_constructor("method", METHOD, construct_method),
             "exception": construct_def_constructor("exception", EXCEPTION, construct_exception),
             "var": construct_def_constructor("var", VARIABLE, construct_variable),
             "alias": construct_def_constructor("alias", ALIAS, construct_alias),
             "function": construct_def_constructor("function", FUNCTION, self.function_def_constructor),
             "saber": construct_def_constructor("saber", SABER, construct_saber),
-            "lam": construct_def_constructor("lam", LAMBDA, self.lambda_def_constructor),
+            "lam": construct_anon_constructor("lam", LAMBDA, self.lambda_anon_constructor),
             "operator": construct_def_constructor("operator", OPERATOR, self.operator_def_construtor),
             "constructor": construct_def_constructor("constructor", CONSTRUCTOR, constructor_def_constructor),
             "class": construct_def_constructor("class", CLASS, self.class_def_constructor),
@@ -379,6 +380,14 @@ class LiONBasic(TreeManager):
         custom_struct.update({CLASS_ATTRIBUTE: CLASS})
         return custom_struct
 
+    def overload_def_constructor(self, pathname: str, code, filename: str = None, __rs__=None):
+        custom_struct = self.struct_def_constructor(pathname, code, filename=filename, __rs__=__rs__)
+        fns = {k: v for k, v in custom_struct.items() if is_node(v)}
+        out_overload = construct_node(get_pathname_name(pathname), OVERLOAD, fns)
+        if fns.get("_"):
+            out_overload.update({"_": fns.pop("_")})
+        return out_overload
+
     @staticmethod
     def function_def_constructor(pathname: str, args, code: list = None, __rs__=None):
         if not code:
@@ -388,7 +397,7 @@ class LiONBasic(TreeManager):
         return construct_function(pathname, args, code, __rs__=__rs__)
 
     @staticmethod
-    def lambda_def_constructor(args: tuple | list[dict[str, Any]], code: list = None, __rs__=None):
+    def lambda_anon_constructor(args: tuple | list[dict[str, Any]], code: list = None, __rs__=None):
         if code is None:
             code = list(args)
             args = tuple()
