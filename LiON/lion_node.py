@@ -235,7 +235,7 @@ def construct_function(name: str, args: list | tuple, code, **kwargs) -> dict[st
     return node
 
 
-def construct_saber(name: str, code, **kwargs):
+def construct_saber(name: str, code: list = None, **kwargs):
     return construct_node(name, SABER, code, **kwargs)
 
 

@@ -1,0 +1,12 @@
+overload x {
+    lam {}
+    lam (a) {
+        echo tudo
+    }
+    lam (a, b) {
+        echo 2
+    }
+    saber _ {
+        echo muitos
+    }
+}
