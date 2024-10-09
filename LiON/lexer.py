@@ -200,7 +200,7 @@ def lexer_delimiter(code: str, debug=False, depth=0) -> list[str]:
             if char == INLINE_COMMENT:
                 comment['inline'] = True
 
-            elif len(code[i:]) >= 1:
+            elif len(code[i:]) > 1:
                 if char == '/' and code[i + 1] == '*':
                     comment['multiline'] = True
                     continue
