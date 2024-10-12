@@ -167,6 +167,7 @@ class LiONBasic(TreeManager):
             "keyvalue": construct_def_constructor("keyvalue", VARIABLE, self.keyvalue_def_constructor),
 
             # ARITHMETIC:
+            "enum": construct_builtin("enum", enumerate),
             "range": construct_builtin("range", range),
             "$": construct_builtin("$", self.eval_builtin),
             "!": construct_builtin("!", lambda *args, **kwargs: not self.eval_builtin(*args, **kwargs)),
@@ -328,11 +329,7 @@ class LiONBasic(TreeManager):
         return self.exec(node, args, kwargs, restrictions, scope)
 
     def set_statement(self, pathname: str, value=None, __rs__=None, __scope__=None):
-        try:
-            self.set_rel(pathname, value, __scope__=__scope__)
-        except NodeNotFound:
-            name = get_pathname_name(pathname)
-            self.pack(pathname, construct_variable(name, value, __rs__=__rs__), __scope__=__scope__)
+        self.set_rel(pathname, value, __scope__=__scope__)
 
     def restrict_statement(self, pathname: str, restrictions: tuple[str], __scope__=None):
         if isinstance(pathname, (tuple, list)):
@@ -654,10 +651,37 @@ class LiONBasic(TreeManager):
             return self.filter_string(pathname, iterable, condition_code)
         return type_(self.filter(pathname, iterable, condition_code))
 
+    @scoped("multi_each")
+    def multi_each(self, params: tuple[str], iterable, code):
+        names = []
+        for param in params:
+            name = get_pathname_name(param)
+            self.pack(name, construct_variable(name, None))
+            names.append(name)
+
+        call_buf = None
+
+        for it in iterable:
+            for i, ele in enumerate(it):
+                self.set_rel(names[i], ele)
+
+            callout = self.parse_calls_direct(code)
+            if isinstance(callout, AbstractInternal):
+                if callout.type == 'BREAK':
+                    break
+                elif callout.type == 'CONTINUE':
+                    continue
+                call_buf = callout
+
+        return call_buf
+
     @scoped("each")
-    def each_statement(self, pathname: str, iterable, code):
+    def each_statement(self, pathname: tuple[str] | str, iterable, code):
         if self.get_debug():
             self.stdout(f'[Parser] at each `{pathname}` loop with iterable = {iterable} ==> {code} ')
+
+        if isinstance(pathname, tuple):
+            return self.multi_each(pathname, iterable, code)
 
         name = get_pathname_name(pathname)
 

@@ -5,7 +5,6 @@ NODE INFORMATION
 
 DESCRIPTION
     The `set` statement is used to modify the relative attribute from a node given it's pathname.
-    If the given pathname does not exist, it will create a variable.
 
 SYNTAX
     set <pathname> <value: Any>
@@ -14,15 +13,15 @@ SYNTAX
     -> By default `value` is none
 
 USAGE
-    - Creating variables
+    - Modifying variables
         ```
-        set n1 3
-        set n2 4
-
-        echo [?n1 * ?n2]
+        var health 200
+        echo Your health is ?health
+        set health 100
+        echo After an attack, it's now ?health
         ```
 
-    - Modifying the relative
+    - Modifying the relative of any node
         ```
         function duck (a, b) { 
             ?a + ?b
