@@ -5,31 +5,40 @@
     <br>
 </h1>
 <i style="font-size: xx-large">
-Overloaded functions, bugfixes 1.27
+Function masks, more functional features, optimized lexer, 1.28a
 </i>
 <br>
 
 ## Overlook ✨
 ### Additions
-- Added `overload` functions that can redirect to other sub-functions by the number of arguments
-- Added anonymous constructors, which do not require a pathname, instead they generate a hex uuid4
-- Added `enum` for enumeration on iterables (1.27d)
+- Added from Python:
+  - `avg` for getting the average of all numbers in a given iterable
+  - `sum` for getting the sum of all numbers in a given iterable
+  - `any` checks if any element of a given iterable is true
+  - `all` checks if all elements of a given iterable are true
 
-### Documentation
-- Added changelogs
+- Add `reduce` for folding an iterable's elements by a given node
+- Add `curry.lion` script at `@scripts` for demonstrating some currying with functions.
+- Add `curry` constructor in `@std/construtil.lion` for facilitating currying.
+- Added function masks, that is a new way of calling functions in LiON that's more aligned with other programming languages.
+  - Example: 
+    ```sh
+    function add (x, y) {?x + ?y}
+    # traditional mask
+    echo [add 1 2]
+    
+    # function mask
+    echo add[1 2]      # syntax: <pathname>[arg1 arg2 ...]
+    ```
+  - Explanation: Both calls are equivalent and produce the same result, we can pass the pathname to be before the arguments, which are enclosed by `[ ]`
+  - For now, function masks _do not_ work with nodes whose pathnames are not alphanumeric.
+  > **NOTICE:** This is an _experimental_ feature, it's not final and can change/be-removed over the course of time.
+
 
 ### Improvements
-- Made `lam` an anonymous constructor
-- Added `multi-each` functionality to the `each` statement, that can combine with `enum` to create a more numeric approach to iterating. (1.27d)
-- Made `set` statement NOT create new variables when not finding a pathname.
-
-### Bugfixes
-- At parser
-  - Made constructing nodes with empty names not allowed
-  - Made constructing non-string pathnames / names not allowed
-  OBS: You can still do it with `conf`, but it will be fixed later
-- At lexer
-  - Comments took an extra character fixed (1.27c)
+- Made `exec` receive an exact amount of arguments.
+- Made `lam`, `function` and `saber` constructors allow kwargs so for currying.
+- Made the categorizer from lexer optimize single masks in a call. So adding multiple nested masks don't compromise too much performance.
 
 ## References
 * Go back to [Readme](README.md)
@@ -37,11 +46,11 @@ Overloaded functions, bugfixes 1.27
 * License: [GNU-GPLv3](LICENSE)
 * GitHub: [LiON repository](https://www.github.com/rkhue/lion/)
 
-Written 28-09-2024 by Felipe Fernandes
+Written 13-10-2024 by Felipe Fernandes
 
 ## About
 LiON Copyright (C) 2024
 
-> Changelog written in September 28th, 2024 (20-09-2024) 06:10 PM GMT-3
+> Changelog written in October 13th, 2024 (13-10-2024) 22:30 GMT-3
 > 
 > By Felipe Fernandes, the author. Profiled [rkhue](https://www.github.com/rkhue/) at GitHub

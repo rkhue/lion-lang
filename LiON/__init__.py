@@ -100,7 +100,7 @@ class LiONStandard(LiONBasic):
 
     def repair_node(self, pathname: str, comparison: dict[str, Any] = None, silent=False):
         node = self.get(pathname)
-        comparison_module = construct_node("") if not comparison else comparison
+        comparison_module = construct_node(get_pathname_name(pathname)) if not comparison else comparison
 
         if not silent:
             self.stdout(f'[Repair] Analyzing {repr(pathname)} {len(node)}x{len(comparison_module)}')

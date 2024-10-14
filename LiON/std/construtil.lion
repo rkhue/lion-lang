@@ -1,3 +1,9 @@
+constructor curry (pathname, no, kwargs) {
+    new saber ?pathname {
+        exec this::no ?__args__ ?this.kwargs
+    } -> (no: ?no, kwargs: ?kwargs)
+}
+
 constructor fastsaber (pathname, code) {
     new saber ?pathname {
         each element ?__args__ {

@@ -1,0 +1,12 @@
+function mult (x, y) {
+    ?x * ?y
+}
+
+constructor multiplier (pathname, a) {
+    new function ?pathname (x) {
+        mult ?x ?this.a
+    } -> (a: ?a)
+}
+
+multiplier double 2
+multiplier triple 3

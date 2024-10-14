@@ -2,6 +2,7 @@ from LiON.lang.restrictions import *
 
 REGEX_COMMENT_PATTERN = r'(#.*)|(\/\*)+?[\w\W]+?(\*\/)+'
 REGEX_NUMERIC_PATTERN = r'(\d+(\.\d+)?|\.\d+)[f%]?'
+REGEX_FUNCTION_MASK_PATTERN = r'^(?P<pathname>[\w\.]+)\[(?P<posargs>(.|\s)*)\]'
 
 RECOGNIZED_BRACKET_PAIRS = {
     "{": "}",

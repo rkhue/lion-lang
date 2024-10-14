@@ -380,7 +380,12 @@ def lexer_condemner(token: str, debug=False, expects=None,
     if token.startswith('[') and token.endswith(']'):
         return lexer_mask(cropped_token)
 
-    elif token.startswith('&[') and token.endswith(']'):
+    function_mask_match = re.match(REGEX_FUNCTION_MASK_PATTERN, token)
+    if function_mask_match:
+        groups = function_mask_match.groupdict()
+        return lexer_mask(groups[LEXER_TYPE_PATHNAME] + TOKENIZER_DELIMITER + groups[LEXER_TYPE_POSARGS])
+
+    if token.startswith('&[') and token.endswith(']'):
         return lexer_mask(cropped_token[1:], returns=LIST_MASK_TYPE, debug=debug)
 
     elif token.startswith('|[') and token.endswith(']'):
@@ -497,6 +502,9 @@ def lexer_categorize(call: list[str], debug=False, at=None, kwargs=None) -> dict
     condemned = lexer_condemner(pathname, debug=debug, at=at)
 
     if condemned[0] != STRING_UNKNOWN:
+        if len(call) == 0 and condemned[0] == MASK_TYPE:
+            return condemned[1]
+
         pathname = EXPRESSION_MARKER
         posargs.append(condemned)
 

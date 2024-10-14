@@ -4,7 +4,7 @@ from LiON.modules.lman import LanguageManager
 from LiON.lexer import transpose_call, lexer_cascade
 from LiON.modules.dms import LionDMS
 from LiON.lang.semantic import *
-from functools import lru_cache
+from functools import lru_cache, reduce
 from LiON.parser import *
 from LiON import funclib
 import sys
@@ -114,7 +114,7 @@ class LiONBasic(TreeManager):
             "rename": construct_statement("rename", self.rename),
             "new": construct_statement("new", self.new_statement),
             "call": construct_statement("call", self.call_statement),
-            "exec": construct_statement("exec", self.exec_statement),
+            "exec": construct_statement("exec", self.exec),
             "conf": construct_statement("conf", self.conf),
             "set": construct_statement("set", self.set_statement),
             "flip": construct_statement("flip", self.flip),
@@ -167,8 +167,13 @@ class LiONBasic(TreeManager):
             "keyvalue": construct_def_constructor("keyvalue", VARIABLE, self.keyvalue_def_constructor),
 
             # ARITHMETIC:
+            "sum": construct_builtin("sum", sum),
+            "avg": construct_builtin("avg", lambda x: sum(x) / len(x)),
+            "all": construct_builtin("all", all),
+            "any": construct_builtin("any", any),
             "enum": construct_builtin("enum", enumerate),
             "range": construct_builtin("range", range),
+            "reduce": construct_builtin("reduce", self.reduce_statement),
             "$": construct_builtin("$", self.eval_builtin),
             "!": construct_builtin("!", lambda *args, **kwargs: not self.eval_builtin(*args, **kwargs)),
             "+": construct_builtin("+", self.ret_increment_builtin),
@@ -323,7 +328,7 @@ class LiONBasic(TreeManager):
         scope = get_from_dict(SCOPE_ATTRIBUTE, kwargs)
         return self.call(pathname, args, kwargs, restrictions, scope)
 
-    def exec_statement(self, node: dict[str, Any], *args, **kwargs):
+    def exec_statement(self, node: dict[str, Any], args, **kwargs):
         restrictions = get_from_dict(RESTRICTIONS_ATTRIBUTE, kwargs)
         scope = get_from_dict(SCOPE_ATTRIBUTE, kwargs)
         return self.exec(node, args, kwargs, restrictions, scope)
@@ -384,28 +389,27 @@ class LiONBasic(TreeManager):
         if fns.get("_"):
             out_overload.update({"_": fns.pop("_")})
         return out_overload
-
     @staticmethod
-    def function_def_constructor(pathname: str, args, code: list = None, __rs__=None):
+    def function_def_constructor(pathname: str, args, code: list = None, **kwargs):
         if not code:
             code = list(args)
             args = ()
 
-        return construct_function(pathname, args, code, __rs__=__rs__)
+        return construct_function(pathname, args, code, **kwargs)
 
     @staticmethod
-    def lambda_anon_constructor(args: tuple | list[dict[str, Any]], code: list = None, __rs__=None):
+    def lambda_anon_constructor(args: tuple | list[dict[str, Any]], code: list = None, **kwargs):
         if code is None:
             code = list(args)
             args = tuple()
 
-        return construct_lambda(args, code, __rs__=__rs__)
+        return construct_lambda(args, code, **kwargs)
 
-    def operator_def_construtor(self, symbol: str, data: dict[str, Any] | str, __rs__=None) -> dict[str, Any]:
+    def operator_def_construtor(self, symbol: str, data: dict[str, Any] | str, **kwargs) -> dict[str, Any]:
         if isinstance(data[PRECEDENCE_ATTRIBUTE], str):
             data[PRECEDENCE_ATTRIBUTE] = self.opman.get_operator_precedence(self.opman.get(data[PRECEDENCE_ATTRIBUTE]))
 
-        return construct_operator(symbol, __rs__=__rs__, **data)
+        return construct_operator(symbol, **kwargs, **data)
 
     # CONVENIENCE CONSTRUCTORS
     @staticmethod
@@ -650,6 +654,9 @@ class LiONBasic(TreeManager):
         if type_ is str:
             return self.filter_string(pathname, iterable, condition_code)
         return type_(self.filter(pathname, iterable, condition_code))
+
+    def reduce_statement(self, node: dict[str, Any], iterable):
+        return reduce(lambda x, y: self.exec(node, (x, y)), iterable)
 
     @scoped("multi_each")
     def multi_each(self, params: tuple[str], iterable, code):
