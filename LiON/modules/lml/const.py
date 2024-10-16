@@ -1,0 +1,5 @@
+LML_LION_SCRIPTLET = '@@'
+LML_CONTENT_FIND_REGEX = r'^(?!@@)()*[\r\n]+'
+LML_TEMPORARY_REPLACEMENT = ":::lml:::"
+LML_NEWLINE = "."
+LML_STDOUT_NAME = "lmout"
