@@ -6,7 +6,7 @@ To use operators, you must use the `$` builtin as for evaluating given expressio
 All numbers and operands must be separated by spaces. See down an example:
 ```lion
 # Do some simple arithmetic
-set basic [$ 7 + 1 * 9 - 3]
+var basic [$ 7 + 1 * 9 - 3]
 echo ?basic
 ```
 ### Rounding
@@ -23,9 +23,9 @@ This operator returns the rest of integer division, or it can be used to format 
 # Convert seconds to hours, minutes and seconds
 set given   [cast.int [input "Type some seconds: "]]
 # Processing
-set seconds [$ ?given // 3600]
-set minutes [$ [$ ?given % 3600] // 60]
-set hours   [$ [$ ?given % 3600] // 60]
+var seconds [$ ?given // 3600]
+var minutes [$ [$ ?given % 3600] // 60]
+var hours   [$ [$ ?given % 3600] // 60]
 
 # Using the `%d` mark for integers
 echo [$ "Hours %d"   % ?hours]
