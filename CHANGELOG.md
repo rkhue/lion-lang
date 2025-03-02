@@ -11,34 +11,38 @@ Ellipsis, LiON Neo, 1.29a
 
 ## Overlook ✨
 ### Additions
-- Added from Python:
-  - `avg` for getting the average of all numbers in a given iterable
-  - `sum` for getting the sum of all numbers in a given iterable
-  - `any` checks if any element of a given iterable is true
-  - `all` checks if all elements of a given iterable are true
+- LiON Neo
+  * YAML style definition files
+  * Compiles to ASCII colored text
+  * `import @std/neo.py`
 
-- Add `reduce` for folding an iterable's elements by a given node
-- Add `curry.lion` script at `@scripts` for demonstrating some currying with functions.
-- Add `curry` constructor in `@std/construtil.lion` for facilitating currying.
-- Added function masks, that is a new way of calling functions in LiON that's more aligned with other programming languages.
-  - Example: 
-    ```sh
-    function add (x, y) {?x + ?y}
-    # traditional mask
-    echo [add 1 2]
-    
-    # function mask
-    echo add[1 2]      # syntax: <pathname>[arg1 arg2 ...]
-    ```
-  - Explanation: Both calls are equivalent and produce the same result, we can pass the pathname to be before the arguments, which are enclosed by `[ ]`
-  - For now, function masks _do not_ work with nodes whose pathnames are not alphanumeric.
-  > **NOTICE:** This is an _experimental_ feature, it's not final and can change/be-removed over the course of time.
+### Changes
+- Changed distribution operator to be `...` instead.
 
 
-### Improvements
-- Made `exec` receive an exact amount of arguments.
-- Made `lam`, `function` and `saber` constructors allow kwargs so for currying.
-- Made the categorizer from lexer optimize single masks in a call. So adding multiple nested masks don't compromise too much performance.
+## For the future
+### Language
+- Alignment with new principles of NOP
+  - Composition over inheritance
+    - `trait` as `method` registers
+    - `impl` to implement traits to `class`es
+    - Constructors now as `template`
+- New macro definition language for the LXJ _unnamed for now_
+  - Dynamic statement processing with macros
+  - YAML based
+  - Statement datatype
+    - Compile-time statement pre-processing
+
+### Compiler
+- Transitioning the lexer to LXJ (LiON x JSON compiler)
+- Standardization of the JSON Intermediary language to JILL
+
+
+### 
+- Implementing a new faster runtime in Rust (in progress)
+  - Integration with Python3 via pyo3 and maturin
+  - Project & Namespace oriented
+  - Communication via JILL
 
 ## References
 * Go back to [Readme](README.md)
@@ -51,6 +55,6 @@ Written 13-10-2024 by Felipe Fernandes
 ## About
 LiON Copyright (C) 2024
 
-> Changelog written in October 13th, 2024 (13-10-2024) 22:30 GMT-3
+> Changelog written in , 2025 (02/03/2025) 22:30 GMT-3
 > 
 > By Felipe Fernandes, the author. Profiled [rkhue](https://www.github.com/rkhue/) at GitHub
