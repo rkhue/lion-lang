@@ -1,6 +1,5 @@
 from LiON.parser import *
 from LiON.modules.lml.const import *
-import re
 
 
 def parseline(line: str):

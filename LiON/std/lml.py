@@ -20,7 +20,10 @@ def node_func(node: dict[str, Any]):
 
 def lml_mode(modes: dict[str, Callable]):
     def decorator(func):
-        def wrapper(mode: str, args: str, refs: dict[str, Any]):
+        def wrapper(mode: str, args: str, refs: dict[str, Any] = None):
+            if refs is None:
+                refs = {}
+
             if mode not in modes:
                 raise InvalidLMLMode(f"Cannot invoke LML mode {mode:!r}, expected:"
                                      f" {', '.join((repr(s) for s in modes))}")

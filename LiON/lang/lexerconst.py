@@ -3,6 +3,7 @@ from LiON.lang.restrictions import *
 REGEX_COMMENT_PATTERN = r'(#.*)|(\/\*)+?[\w\W]+?(\*\/)+'
 REGEX_NUMERIC_PATTERN = r'(\d+(\.\d+)?|\.\d+)[f%]?'
 REGEX_FUNCTION_MASK_PATTERN = r'^(?P<pathname>[\w\.]+)\[(?P<posargs>(.|\s)*)\]'
+REGEX_LAMBDA_EXPRESSION = r'^\((?P<posargs>[^\)]*)\)=>\{(?P<code>(\s|.)*)\}$'
 
 RECOGNIZED_BRACKET_PAIRS = {
     "{": "}",
@@ -19,8 +20,10 @@ MULTILINE_COMMENT = ("/*", "*/")
 
 GLOBAL = 'global'
 LOCAL = 'local'
+NONLOCAL = 'nonlocal'
+DEFAULT = 'default'
 
-SCOPE_KEYWORDS = (GLOBAL, LOCAL)
+SCOPE_KEYWORDS = (GLOBAL, LOCAL, NONLOCAL, DEFAULT)
 DEFAULT_PERMISSIONS = DEFAULT_RESTRICTIONS + SCOPE_KEYWORDS
 
 
@@ -35,6 +38,7 @@ STRING_MARKER = '"'
 COLLECTIONS_DELIMITER = ','
 DICT_DELIMITER = ':'
 GET_PATHNAME_MARKER = "::"
+ELLIPSIS_MARKER = "..."
 
 EXPRESSION_MARKER = "$"
 
@@ -44,14 +48,17 @@ DMS_DIRECTORY_TYPE = "dms"
 FLOAT_TYPE = "float"
 INT_TYPE = "int"
 BOOLEAN_TYPE = "bool"
+NONE_TYPE = "none"
 
 CODEBLOCK_TYPE = "code"
 MASK_TYPE = "mask"
+ELLIPSIS_TYPE = "ellipsis"
 TUPLE_TYPE = "tuple"
 LIST_TYPE = "list"
 LIST_MASK_TYPE = "list-mask"
 KEY_VALUE_TYPE = "key-value"
 DISTRIBUTE_MASK = "dist-mask"
+LAMBDA_EXPRESSION = "lam-exp"
 
 LEXER_TYPE_KEYWORDS = "kw"
 LEXER_TYPE_PATHNAME = "pathname"
@@ -68,9 +75,10 @@ BOOL_KEYWORDS = {
     "off": False,
     "true": True,
     "false": False,
-    "none": None,
-    "null": None,
-    "nil": None
+}
+
+NONE_KEYWORDS = {
+    "none", "null", "nil"
 }
 
 FLIPPING_MAP = {

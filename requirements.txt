@@ -1,3 +1,4 @@
 tqdm
 pygments
 prompt_toolkit
+PyYAML

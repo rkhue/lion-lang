@@ -1,3 +1,4 @@
+from LiON.lexer import full_lexer_json
 from LiON.modules.treevisu import *
 from LiON.funclib import *
 from copy import deepcopy
@@ -30,6 +31,7 @@ class LiONStandard(LiONBasic):
             "reset": construct_builtin("reset", self.reset_builtin),
             "repair": construct_builtin("repair", self.repair_builtin),
             "lex": construct_builtin("lex", self.lexer_builtin, __icon__="✒️"),
+            "lxj": construct_builtin("lxj", lambda code: full_lexer_json(code, debug=self.get_debug()), __icon__="✒️"),
 
             # TREE VISUALIZING
             "info": construct_builtin('info', self.info, __icon__="ℹ️"),

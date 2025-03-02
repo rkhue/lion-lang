@@ -179,17 +179,58 @@ if [?coins > ?product_price] {
     echo "Cannot buy"
 }
 ```
-#### The `cascade-if` statement
+#### The `cascade if` statement
+The cascading if, does execute each clause where it's condition is `true`. If no conditions were met, exeucte the `else` clause.
+
 ```lion
+/*
+# Conditions for a supposed keyword to be valid is:
+- More than 8 characters
+- Contain the name of the user
+- Start with the letter A
+*/
+
+
+# Variables
+var username "Eric"
+var word "AnOtherDayric23"
+var needed 3
+var met 0
+
+# Using the cascade-if to solve the problem
+cascade if [[len ?word] > 8] {
+    echo "[✅] Has more than 8 characters"
+    ++ met
+} elif [?username in ?word] {
+    echo "[✅] Does contain the user name in it."
+    ++ met
+} elif [str.starts "A" ?word] {
+    echo "[✅] Does start with A."
+    ++ met
+} else {
+    echo "[❌] No conditions were met"
+}
 
 ```
 #### The `switch` statement
+The switch statement compares the relative of a node x and executes blocks case any test returns true.
+```
+var option [input "Choose an option: "]
+
+switch option case "banana" {
+    echo "🍌"
+} case "apple" {
+    echo "🍏"
+} default {
+    echo "Invalid option! Try again next time!"
+}
+```
 
 #### The `repeat` statement
-#### The `do-repeat` statement
+#### The `do repeat` statement
 
 #### The `while` statement
-#### The `do-while` statement
+#### The `do while` statement
 
 #### The `each` statement
 #### The `for` statement

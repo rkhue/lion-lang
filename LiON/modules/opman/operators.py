@@ -57,6 +57,7 @@ def is_inside(a: tuple | set | str, b: tuple | set | str) -> bool:
 def find_where(a, b: tuple | set | str) -> int:
     return sum(int(a == m) for m in b)
 
+
 STANDARD_OPERATORS = {
     # Arithmetic Operators
     "+": construct_def_operator("+", type=2, proc=8, lam=lambda x, y: x + y),

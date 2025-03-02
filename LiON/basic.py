@@ -117,7 +117,9 @@ class LiONBasic(TreeManager):
             "exec": construct_statement("exec", self.exec),
             "conf": construct_statement("conf", self.conf),
             "set": construct_statement("set", self.set_statement),
+            "mut": construct_statement("mut", self.mut_statement),
             "flip": construct_statement("flip", self.flip),
+            "fliplist": construct_statement("flip", self.flip_list),
             "restrict": construct_statement("restrict", self.restrict_statement),
             "promote": construct_statement("promote", self.promote_from_pathname),
             "demote": construct_statement("demote", self.demote),
@@ -153,6 +155,7 @@ class LiONBasic(TreeManager):
             "exception": construct_def_constructor("exception", EXCEPTION, construct_exception),
             "var": construct_def_constructor("var", VARIABLE, construct_variable),
             "alias": construct_def_constructor("alias", ALIAS, construct_alias),
+            "builtin": construct_def_constructor("builtin", BUILTIN, construct_builtin),
             "function": construct_def_constructor("function", FUNCTION, self.function_def_constructor),
             "saber": construct_def_constructor("saber", SABER, construct_saber),
             "lam": construct_anon_constructor("lam", LAMBDA, self.lambda_anon_constructor),
@@ -168,12 +171,20 @@ class LiONBasic(TreeManager):
 
             # ARITHMETIC:
             "sum": construct_builtin("sum", sum),
+            "rev": construct_builtin("rev", lambda x: reversed(x)),
             "avg": construct_builtin("avg", lambda x: sum(x) / len(x)),
             "all": construct_builtin("all", all),
             "any": construct_builtin("any", any),
             "enum": construct_builtin("enum", enumerate),
             "range": construct_builtin("range", range),
             "reduce": construct_builtin("reduce", self.reduce_statement),
+            "sort": construct_builtin("sort", lambda iterable, predicate=None, rev=False: sorted(
+                iterable,
+                reverse=rev,
+                key=None if not predicate else lambda t: self.exec(predicate, (t,))
+            ),
+                                      ),
+            "coalesce": construct_builtin("coalesce", self.coalesce),
             "$": construct_builtin("$", self.eval_builtin),
             "!": construct_builtin("!", lambda *args, **kwargs: not self.eval_builtin(*args, **kwargs)),
             "+": construct_builtin("+", self.ret_increment_builtin),
@@ -336,6 +347,15 @@ class LiONBasic(TreeManager):
     def set_statement(self, pathname: str, value=None, __rs__=None, __scope__=None):
         self.set_rel(pathname, value, __scope__=__scope__)
 
+    def mut_statement(self, pathname: str, key=None, value=None, __scope__=None):
+        if isinstance(key, tuple | list):
+            for k in key:
+                self.mut_statement(pathname, k, value)
+            return
+
+        node = self.get(pathname, __scope__=__scope__)
+        node[RELATIVE_ATTRIBUTE][key] = value
+
     def restrict_statement(self, pathname: str, restrictions: tuple[str], __scope__=None):
         if isinstance(pathname, (tuple, list)):
             for p in pathname:
@@ -389,6 +409,7 @@ class LiONBasic(TreeManager):
         if fns.get("_"):
             out_overload.update({"_": fns.pop("_")})
         return out_overload
+
     @staticmethod
     def function_def_constructor(pathname: str, args, code: list = None, **kwargs):
         if not code:
@@ -655,7 +676,7 @@ class LiONBasic(TreeManager):
             return self.filter_string(pathname, iterable, condition_code)
         return type_(self.filter(pathname, iterable, condition_code))
 
-    def reduce_statement(self, node: dict[str, Any], iterable):
+    def reduce_statement(self, iterable, node: dict[str, Any]):
         return reduce(lambda x, y: self.exec(node, (x, y)), iterable)
 
     @scoped("multi_each")
@@ -830,18 +851,25 @@ class LiONBasic(TreeManager):
         self.stdout('=' * 30)
         size_adjust = len(str(len(view_list))) + 1
         for index, ele in enumerate(view_list):
-            self.stdout(f'{index}. '.ljust(size_adjust) + repr(ele))
+            self.stdout(f'{index}. '.rjust(size_adjust) + repr(ele))
         self.stdout('=' * 30)
         self.stdout(f'Listed {len(view_list)} elements.')
 
-    def info(self, pathname: str = None, mx=32, s="some"):
-        tree_path = self.get_root() if not pathname else self.get(pathname)
+    def info(self, pathname: str | list | tuple = None, mx=32, s="some"):
+        is_local = False
+        if isinstance(pathname, dict | list | tuple):
+            tree_path = pathname
+            name = "local_object"
+            is_local = True
+        else:
+            tree_path = self.get_root() if not pathname else self.get(pathname)
+            name = tree_path["__name__"] if not pathname else pathname
 
         if isinstance(tree_path, (tuple, list)):
             self.info_list(tree_path, pathname if pathname is not None else self[NAME_ATTRIBUTE])
             return
 
-        self.stdout(f'On Tree at Parent: {tree_path["__name__"] if not pathname else pathname}')
+        self.stdout(f'On {"Tree" if not is_local else "local_object"} at Parent: {name}')
         self.stdout('=' * 30)
         listed = self.build_info(pathname, root=tree_path, mx=mx, s=s)
         self.stdout('=' * 30)
@@ -875,3 +903,10 @@ class LiONBasic(TreeManager):
         lexed_exp = self.opman.shunting_yard(args)
         result = self.opman.parse_sorted(lexed_exp)
         return result if not r else (round(result, r) if isinstance(r, int) else round(result, int(r)))
+
+    @staticmethod
+    def coalesce(*args):
+        for arg in args:
+            if arg is not None:
+                return arg
+        return None

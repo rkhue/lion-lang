@@ -32,8 +32,7 @@ class Scope:
     def __getitem__(self, item):
         return self.scope_stack[0][item]
 
-    def get_debug(self, debug=None):
-        return debug or self.debug
+    def get_debug(self, debug=None):        return debug or self.debug
 
     def get_root(self):
         return self.scope_stack[0]
@@ -230,6 +229,17 @@ class Scope:
                                 f" the relative of node {repr(node[NAME_ATTRIBUTE])} | {e}")
 
         node[RELATIVE_ATTRIBUTE] = rel
+
+    def flip_list(self, pathname: str, options: tuple | list, __scope__=None):
+        node = self.get(pathname, __scope__)
+        value = node[RELATIVE_ATTRIBUTE]
+        try:
+            next_value = (options.index(value) + 1) % len(options)
+        except ValueError | IndexError:
+            raise FlippingError(f"Unable to find flip mappings for {repr(node[RELATIVE_ATTRIBUTE])}"
+                                f" the relative of node {repr(node[NAME_ATTRIBUTE])} in options"
+                                f"{repr(options)}")
+        node[RELATIVE_ATTRIBUTE] = options[next_value]
 
     def restrict(self, pathname: str, restrictions: tuple[str], __scope__=None):
         node = self.get(pathname, __scope__=__scope__)

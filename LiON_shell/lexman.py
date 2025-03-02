@@ -17,7 +17,7 @@ class LiONLexer(RegexLexer):
             (r'\?\w+', Token.Literal),
             (r'\!\w+', Generic.Strong),
             (r'\b(help|lion|import|get|pop|drop|pack|export|new|call|exec|conf|'
-             r'flip|restrict|move|rename|promote'
+             r'flip|restrict|move|rename|promote|mut'
              r'|demote|if|elif|else|switch|case|default|do|while|repeat|from|'
              r'each|iter|itert|iters|for|assert|throw|try'
              r'|catch|finally|push|extend|break|continue'
@@ -46,6 +46,7 @@ class LiONLexer(RegexLexer):
             (r'\b(C|U|!U|in|left|right)\b', Operator),
             (r'\b(and|or|xor|not|oc|of)\b', Operator),
             (r'\b(scale|downscale)\b', Operator),
+            (r'(\w+(?=\[.*\]))', Name.Function),  # TODO: FIx
             (r'[a-zA-Z_]\w*', Name),
             (r'\s+', Text),
         ],

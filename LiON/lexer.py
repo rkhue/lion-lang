@@ -1,3 +1,5 @@
+import json
+
 from LiON.lang.const import *
 from LiON.lang.lexerconst import *
 from LiON.exceptions import *
@@ -271,6 +273,7 @@ def lexer_tokenizer(call: str, lexer_debug=False, delimiter=" ") -> list[str]:
     :param lexer_debug: Debugging options
     :param delimiter: Character for delimiting
     :return: Tokenized call
+    :raises KeyError: If call is invalid
     """
     call = call.lstrip().strip()
     tokens = []
@@ -350,7 +353,7 @@ def lexer_string(token: str):
 def lexer_mask(token: str, returns=MASK_TYPE, debug: bool = False) -> tuple[str, Any]:
     if len(token.strip()) == 0:
         raise EmptyMask(f"[Lexer at CONDEMNER] Usage of empty masks is forbidden, given token {repr(token)}")
-    return returns, full_lexer(token, debug, del_comments=False)[-1]  # parse masks
+    return returns, full_lexer(token, debug)[-1]  # parse masks
 
 
 def lexer_condemner(token: str, debug=False, expects=None,
@@ -375,10 +378,19 @@ def lexer_condemner(token: str, debug=False, expects=None,
 
     # codeblocks and masks
     if token.startswith('{') and token.endswith('}'):
-        return CODEBLOCK_TYPE, full_lexer(cropped_token, debug, del_comments=False)
+        return CODEBLOCK_TYPE, full_lexer(cropped_token, debug)
 
     if token.startswith('[') and token.endswith(']'):
         return lexer_mask(cropped_token)
+
+    if token.startswith(f'{ELLIPSIS_MARKER}[') and token.endswith(']'):
+        return lexer_mask(token[4:-1], returns=DISTRIBUTE_MASK, debug=debug)
+
+    lambda_match = re.match(REGEX_LAMBDA_EXPRESSION, token)
+    if lambda_match:
+        groups = lambda_match.groupdict()
+        code, args = groups["code"], groups[LEXER_TYPE_POSARGS]
+        return lexer_mask(f"new lam ({args}) {{{code}}}")
 
     function_mask_match = re.match(REGEX_FUNCTION_MASK_PATTERN, token)
     if function_mask_match:
@@ -388,15 +400,17 @@ def lexer_condemner(token: str, debug=False, expects=None,
     if token.startswith('&[') and token.endswith(']'):
         return lexer_mask(cropped_token[1:], returns=LIST_MASK_TYPE, debug=debug)
 
-    elif token.startswith('|[') and token.endswith(']'):
-        return lexer_mask(cropped_token[1:], returns=DISTRIBUTE_MASK, debug=debug)
+    if token.startswith(ELLIPSIS_MARKER):
+        if len(token) > 3:
+            return lexer_mask('[' + token[3:] + ']', returns=DISTRIBUTE_MASK, debug=debug)
+        return ELLIPSIS_TYPE, ELLIPSIS_MARKER
 
     if token.startswith(LITERAL_MARKER) and len(token) > 1:
         # if len(token) <= 1:
         #     raise EmptyMask(f"[Lexer at CONDEMNER] Usage of empty literals is forbidden, given token {repr(token)} "
         #                     f"in case of only using `?`, please enclose it into a string.")
 
-        return MASK_TYPE, full_lexer(token[1:], debug, del_comments=False)[-1]
+        return MASK_TYPE, full_lexer(token[1:], debug)[-1]
 
     # tuples or dicts
     if token.startswith('(') and token.endswith(')'):
@@ -423,7 +437,11 @@ def lexer_condemner(token: str, debug=False, expects=None,
 
     # boolean or null
     if token in BOOL_KEYWORDS:
-        return BOOLEAN_TYPE, BOOL_KEYWORDS[token.lower()]
+        return BOOLEAN_TYPE, BOOL_KEYWORDS[token]
+
+    elif token in NONE_KEYWORDS:
+        return NONE_TYPE, None
+
     # doesn't know
     if GET_PATHNAME_MARKER in token:
         return lexer_get_pathname(token, debug)
@@ -537,18 +555,29 @@ def lexer_pre_parser(calls: list[str], debug=False):
     return [lexer_categorize(c, debug) for c in tokenized]
 
 
-def full_lexer(text: str, debug=False, del_comments=True) -> list[dict]:
+def full_lexer(text: str, debug: bool = False) -> list[dict]:
     """
     The full lexer of LiON gets code represented as text and "compiles" it, so it is understandable by the parser.
     Also, it is of function of the lexer to type arguments and handle syntax errors.
     :param text: Code given
-    :param debug: Lexer debugging options
-    :param del_comments: Delete comments option, if on, it removes recognized comments
+    :param debug: Activate Lexer debugging
     :return: Lexed code
     """
     calls = lexer_delimiter(text, debug=debug)
 
     return lexer_pre_parser(calls, debug)
+
+
+def full_lexer_json(text: str, debug: bool = False, ensure_ascii: bool = False, indent: int = None) -> str:
+    """
+    Compiles code from a stream to JSON.
+    :param text: Code given
+    :param debug: Activate Lexer debugging
+    :param ensure_ascii:
+    :param indent: Apply indentation of how many characters
+    :return: JSON with lexed code
+    """
+    return json.dumps(full_lexer(text, debug), ensure_ascii=ensure_ascii, indent=indent)
 
 
 def transpose_call(call: dict[str, Any], head='new'):

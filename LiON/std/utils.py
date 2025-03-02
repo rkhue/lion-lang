@@ -95,6 +95,8 @@ def list_directory_builtin(directory: str = '.', s='some'):
             parent_parser.stdout(funclib.newColored((255, 189, 0), f'📦 {t}'))
         elif t.endswith('.lion'):
             parent_parser.stdout(funclib.newColored((255, 255, 0), f'🦁 {t}'))
+        elif t.endswith('.neo'):
+            parent_parser.stdout(funclib.newColored((247, 10, 141), f'🎴 {t}'))
         else:
             parent_parser.stdout(funclib.newColored((189, 189, 189), f'📄 {t}'))
 

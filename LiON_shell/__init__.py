@@ -130,6 +130,9 @@ class LSI(LiONStandard):
             case 'json':
                 return highlight(code, get_lexer_by_name('json'), basic_formatter_cls)
 
+            case 'yaml' | 'yml' | 'neo':
+                return highlight(code, get_lexer_by_name('yaml'), basic_formatter_cls)
+
             case _:
                 try:
                     lexer = get_lexer_by_name(extension)

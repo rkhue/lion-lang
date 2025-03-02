@@ -5,7 +5,7 @@
     <br>
 </h1>
 <i style="font-size: xx-large">
-Function masks, more functional features, optimized lexer, 1.28a
+Ellipsis, LiON Neo, 1.29a
 </i>
 <br>
 
