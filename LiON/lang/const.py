@@ -1,7 +1,7 @@
 from typing import Literal
 
 LANGUAGE = "LiON"
-FILE_EXTENSIONS = ('.lion', '.leonid', ".lions")
+FILE_EXTENSIONS = ('.lion', '.jill', ".lions")
 
 # Node classes
 NEWABLE = "newable"
