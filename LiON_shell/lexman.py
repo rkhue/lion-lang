@@ -18,11 +18,12 @@ class LiONLexer(RegexLexer):
             (r'\!\w+', Generic.Strong),
             (r'\b(help|lion|import|get|pop|drop|pack|export|new|call|exec|conf|'
              r'flip|restrict|move|rename|promote|mut'
-             r'|demote|if|elif|else|switch|case|default|do|while|repeat|from|'
-             r'each|iter|itert|iters|for|assert|throw|try'
+             r'|demote|if|elif|else|switch|case|default|do|while|repeat|from'
+             r'|each|iter|itert|iters|for|assert|throw|try'
+             r'|star|select'
              r'|catch|finally|push|extend|break|continue'
              r'|set|keysfrom|filter|return|cascade|protect|final|method'
-             r'|only|global|local|nonlocal)\b', Keyword),
+             r'|only|global|local|nonlocal|nameof|classof)\b', Keyword),
             (r'\b(node|struct|class|overload'
              r'|inherited|var|alias|function|saber'
              r'|lam|operator|constructor|string|tuple|list'

@@ -183,7 +183,7 @@ As standardized by NOP, JILL considers the following system node classes:
 - `class`
 
 Every other class is a custom class, having the node point to its class' pathname.
-The only caveat here is that you cannot serialize `builtin` nodes, since their relative, instead of pointing to a JILL datatype, they instead point to a implementation language's function. In the current case, Python or Rust.
+The only caveat here is that you cannot serialize `builtin` nodes, since their relative, instead of pointing to a JILL datatype as they are, by definition, completely runtime dependent.
 
 ## Node as First Class Citizens NFCC Model
 Nodes can be passed as arguments and even be the return of a call via the `node` datatype, which stores a node as its value.

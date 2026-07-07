@@ -1,0 +1,120 @@
+{
+    "__name__": "fact",
+    "__class__": "function",
+    "__rel__": [
+        {
+            "pathname": "if",
+            "posargs": [
+                [
+                    "mask",
+                    {
+                        "pathname": "$",
+                        "posargs": [
+                            [
+                                "mask",
+                                {
+                                    "pathname": "E"
+                                }
+                            ],
+                            [
+                                "unk",
+                                "in"
+                            ],
+                            [
+                                "tuple",
+                                [
+                                    [
+                                        "int",
+                                        0
+                                    ],
+                                    [
+                                        "int",
+                                        1
+                                    ]
+                                ]
+                            ]
+                        ]
+                    }
+                ],
+                [
+                    "code",
+                    [
+                        {
+                            "pathname": "return",
+                            "posargs": [
+                                [
+                                    "int",
+                                    1
+                                ]
+                            ]
+                        }
+                    ]
+                ],
+                [
+                    "unk",
+                    "else"
+                ],
+                [
+                    "code",
+                    [
+                        {
+                            "pathname": "$",
+                            "posargs": [
+                                [
+                                    "mask",
+                                    {
+                                        "pathname": "E"
+                                    }
+                                ],
+                                [
+                                    "unk",
+                                    "*"
+                                ],
+                                [
+                                    "mask",
+                                    {
+                                        "pathname": "fact",
+                                        "posargs": [
+                                            [
+                                                "mask",
+                                                {
+                                                    "pathname": "$",
+                                                    "posargs": [
+                                                        [
+                                                            "mask",
+                                                            {
+                                                                "pathname": "E"
+                                                            }
+                                                        ],
+                                                        [
+                                                            "unk",
+                                                            "-"
+                                                        ],
+                                                        [
+                                                            "int",
+                                                            1
+                                                        ]
+                                                    ]
+                                                }
+                                            ]
+                                        ]
+                                    }
+                                ]
+                            ]
+                        }
+                    ]
+                ]
+            ]
+        }
+    ],
+    "__args__": [
+        "E"
+    ],
+    "E": {
+        "__name__": "E",
+        "__class__": "parameter",
+        "__rel__": 1,
+        "__for__": "fact"
+    },
+    "__instanceof__": "function"
+}

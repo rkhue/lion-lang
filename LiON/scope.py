@@ -1,5 +1,5 @@
 from LiON.lion_node import *
-from LiON.lang.lexerconst import GLOBAL, FLIPPING_MAP
+from LiON.lang.lexerconst import GLOBAL, FLIPPING_MAP, LOCAL
 from LiON.exceptions import *
 from typing import Callable
 from functools import wraps
@@ -39,6 +39,14 @@ class Scope:
 
     def get_head(self):
         return self.scope_stack[-1]
+
+    def get_tree_head_by_scope(self, scope_name: str) -> dict[str, Any]:
+        if scope_name == GLOBAL:
+            return self.get_root()
+        elif scope_name == LOCAL:
+            return self.get_head()
+        
+        raise ValueError(f"Invalid scope name {repr(scope_name)}. Expected {repr(GLOBAL)} or {repr(LOCAL)}.")
 
     def get_name(self):
         return self.scope_stack[0][NAME_ATTRIBUTE]
@@ -180,7 +188,7 @@ class Scope:
 
         if __scope__ is not None:
             try:
-                return method(path, *args, root=self.get_root() if __scope__ == GLOBAL else self.get_head())
+                return method(path, *args, root=self.get_tree_head_by_scope(__scope__))
             except NodeNotFound as err:
                 raise NodeNotFound(err.__str__() + f" in the {repr(__scope__)} scope")
 

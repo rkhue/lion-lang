@@ -104,7 +104,6 @@ class LiONBasic(TreeManager):
             "import": construct_statement("import", self.import_statement),
 
             # TREE MANAGEMENT STATEMENTS
-            "*": construct_statement("*", self.star_statement),
             "get": construct_statement("get", self.get),
             "pop": construct_statement("pop", self.pop_statement),
             "drop": construct_statement("drop", self.drop),
@@ -124,6 +123,10 @@ class LiONBasic(TreeManager):
             "promote": construct_statement("promote", self.promote_from_pathname),
             "demote": construct_statement("demote", self.demote),
 
+            # QUERY STATEMENTS
+            "star": construct_statement("star", self.star_statement),
+            "select": construct_statement("select", self.select_statement),
+
             # CONTROL STATEMENTS
             "if": construct_statement("if", self.if_statement),
             "switch": construct_statement("switch", self.switch_statement),
@@ -141,6 +144,8 @@ class LiONBasic(TreeManager):
             "try": construct_statement("try", self.try_statement),
             "keysfrom": construct_statement("keysfrom", self.keysfrom_statement),
             "return": construct_statement("return", self.return_statement),
+            "nameof": construct_statement("nameof", self.nameof_statement),
+            "classof": construct_statement("classof", self.classof_statement),
 
             # RELATIVE OPERATIONS
             "push": construct_statement("push", self.push_statement),
@@ -183,7 +188,7 @@ class LiONBasic(TreeManager):
                 reverse=rev,
                 key=None if not predicate else lambda t: self.exec(predicate, (t,))
             ),
-                                      ),
+            ),
             "coalesce": construct_builtin("coalesce", self.coalesce),
             "$": construct_builtin("$", self.eval_builtin),
             "!": construct_builtin("!", lambda *args, **kwargs: not self.eval_builtin(*args, **kwargs)),
@@ -238,18 +243,25 @@ class LiONBasic(TreeManager):
             "op": construct_builtin("op", self.opman.is_operator),
         })
 
-    def star_statement(self, from_=None, pathname: str = None, __scope__=GLOBAL):
-        if from_ is not None:
-            assert pathname, "Star statement requires a pathname after the from keyword"
-            from_kw = self.lman.query_semantics((FROM_KEYWORD,))
-            assert from_ in from_kw, f"Expected semantic keywords {repr(from_kw)}, got {repr(from_)}"
-            root = self.get(pathname, __scope__)
-            return tuple(s for s in root.values() if is_node(s))
+    def star_statement(self, pathname: str | None = None, __scope__ = GLOBAL):
+        selected_root: dict[str, Any]
 
-        if __scope__ == GLOBAL:
-            return tuple(s for s in self.get_root().values() if is_node(s))
-        elif __scope__ == LOCAL:
-            return tuple(s for s in self.get_head().values() if is_node(s))
+        if pathname is not None:
+            selected_root = self.get(pathname, __scope__)
+        else: 
+            selected_root = self.get_tree_head_by_scope(__scope__)
+        
+        return tuple(s for s in selected_root.values() if is_node(s))
+
+
+    def select_statement(self, pathname: str | None = None, *keys, __scope__ = GLOBAL):
+        selected_root: dict[str, Any]
+        if pathname is not None:
+            selected_root = self.get(pathname, __scope__)
+        else:
+            selected_root = self.get_tree_head_by_scope(__scope__)
+        
+        return tuple(k for (k, s) in selected_root.items() if is_node(s))
 
     def import_statement(self, *args):
         kw = self.lman.query_semantics((FROM_KEYWORD,))
@@ -812,6 +824,12 @@ class LiONBasic(TreeManager):
         finally:
             if finally_block is not None:
                 self.parse_calls(finally_block[1])
+
+    def nameof_statement(self, node: dict[str, Any]):
+        return node[NAME_ATTRIBUTE]
+
+    def classof_statement(self, node: dict[str, Any]):
+        return node[CLASS_ATTRIBUTE]
 
     # TREE VISUALIZING / HELP
 
