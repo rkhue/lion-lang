@@ -1,5 +1,5 @@
 # The lionc.py CLI tool 🦁
-This tool allows for you to run LiON scripts from outside the LSI, while also, 
+This tool allows for you to run LiON scripts from outside the LSI while also
 permitting you to use it for compiling and running scripts and labels.
 
 ## Install and configuration

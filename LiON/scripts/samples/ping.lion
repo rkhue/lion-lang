@@ -1,0 +1,9 @@
+# Ping pong, shows UTF-8 compatibility
+
+function ping (server) {
+    if [?server == "pong"] {
+        echo "🏓"
+    } else {
+        ps ping ?server
+    }
+}

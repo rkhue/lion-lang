@@ -12,6 +12,9 @@ function get_std {
         lmath.py,
         rand.py
     )
+
+    lion @std/construtil.lion -> (silent:on)
+    lion @std/ps.lion -> (silent:on)
 }
 
 function notice {

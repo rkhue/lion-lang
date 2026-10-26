@@ -19,7 +19,7 @@ HELP = funclib.loadRaw(f"{MODULE_DIR}/assets/doc/help.md")
 
 
 def constructor_def_constructor(pathname: str,
-                                args, code: list[dict] = None, __rs__=None):
+                                args, code: list[dict] | None = None, __rs__=None):
     if not code:
         code = list(args)
         args = ()
@@ -30,7 +30,7 @@ def constructor_def_constructor(pathname: str,
 
 
 class LiONBasic(TreeManager):
-    def __init__(self, name: str = LANGUAGE, cargo: dict[str, Callable] = None):
+    def __init__(self, name: str = LANGUAGE, cargo: dict[str, Callable] | None = None):
         super().__init__(name)
         self.stdout = print
         self.token_extrafunc = self.extrafunc
@@ -392,12 +392,15 @@ class LiONBasic(TreeManager):
         return result
 
     @scoped("struct")
-    def struct_def_constructor(self, pathname: str, code, filename=None, __rs__=None):
+    def struct_def_constructor(self, pathname: str, code, filename: str | None = None, __rs__=None):
         name = get_pathname_name(pathname)
         if isinstance(code, str):
             assert code in self.lman.query_semantics((FROM_KEYWORD,))[FROM_KEYWORD], ("Expected "
                                                                                       "third argument to "
                                                                                       "be the `from` keyword.")
+            
+            assert filename is not None, "Cannot create struct from a `from` keyword without a filename"
+
             code = full_lexer(funclib.loadRaw(self.dms.parse(filename)))
         else:
             assert filename is None, "Cannot create struct both from local code and from a filename"
@@ -409,12 +412,12 @@ class LiONBasic(TreeManager):
 
         return struct
 
-    def class_def_constructor(self, pathname: str, code, filename: str = None, __rs__=None):
+    def class_def_constructor(self, pathname: str, code, filename: str | None = None, __rs__=None):
         custom_struct = self.struct_def_constructor(pathname, code, filename=filename, __rs__=__rs__)
         custom_struct.update({CLASS_ATTRIBUTE: CLASS})
         return custom_struct
 
-    def overload_def_constructor(self, pathname: str, code, filename: str = None, __rs__=None):
+    def overload_def_constructor(self, pathname: str, code, filename: str | None = None, __rs__=None):
         custom_struct = self.struct_def_constructor(pathname, code, filename=filename, __rs__=__rs__)
         fns = {k: v for k, v in custom_struct.items() if is_node(v)}
         out_overload = construct_node(get_pathname_name(pathname), OVERLOAD, fns)
@@ -423,7 +426,7 @@ class LiONBasic(TreeManager):
         return out_overload
 
     @staticmethod
-    def function_def_constructor(pathname: str, args, code: list = None, **kwargs):
+    def function_def_constructor(pathname: str, args, code: list | None = None, **kwargs):
         if not code:
             code = list(args)
             args = ()
@@ -431,7 +434,7 @@ class LiONBasic(TreeManager):
         return construct_function(pathname, args, code, **kwargs)
 
     @staticmethod
-    def lambda_anon_constructor(args: tuple | list[dict[str, Any]], code: list = None, **kwargs):
+    def lambda_anon_constructor(args: tuple | list[dict[str, Any]], code: list | None = None, **kwargs):
         if code is None:
             code = list(args)
             args = tuple()
@@ -892,6 +895,7 @@ class LiONBasic(TreeManager):
         listed = self.build_info(pathname, root=tree_path, mx=mx, s=s)
         self.stdout('=' * 30)
         self.stdout(f"Listed {listed} elements.")
+
 
     def help_statement(self, pathname=None):
         if not pathname:

@@ -1,0 +1,23 @@
+# This script is used to make the LiON shell implode
+# It's meant of an example of the freedom that it gives to the user, but it can be used to make the shell unusable if you don't know what you're doing.
+
+function kill_tree {
+    var exceptions &(exceptions, kill_tree, n, conf, each, drop,reg,out,debug,linos) 
+    
+    each n [?select] {
+        if [?n in ?exceptions] {
+            continue
+        }
+
+        # Remove restrictions of the node, substituting it by an empty list
+        conf [?n + ".__rs__"] &()
+
+        # Allows droping it
+        drop ?n
+    }
+
+    drop exceptions
+    drop each
+    drop conf
+    drop drop # Lil joke, you won't be able to come back after this.
+}

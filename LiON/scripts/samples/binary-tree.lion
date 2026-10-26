@@ -1,0 +1,33 @@
+# Binary tree sample: search a binary search tree.
+#
+# A tree is represented as (value, left, right).  A value of 0
+# represents an empty child, so the tree can be written as a literal.
+
+var binary_tree (
+    8,
+    (3, (1, 0, 0), (6, (4, 0, 0), (7, 0, 0))),
+    (10, 0, (14, (13, 0, 0), 0))
+)
+
+var target 13
+var search_node ?binary_tree
+var found false
+
+while { [[search_node 0] != 0] } {
+    if [[search_node 0] == ?target] {
+        set found true
+        break
+    }
+
+    if [?target < [search_node 0]] {
+        set search_node [search_node 1]
+    } else {
+        set search_node [search_node 2]
+    }
+}
+
+if [?found] {
+    echo "Found" ?target "in the binary search tree."
+} else {
+    echo "Did not find" ?target "in the binary search tree."
+}

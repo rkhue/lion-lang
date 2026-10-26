@@ -1,7 +1,7 @@
 from LiON.lion_node import *
 from LiON.lang.lexerconst import GLOBAL, FLIPPING_MAP, LOCAL
 from LiON.exceptions import *
-from typing import Callable
+from typing import Callable, Any, Optional
 from functools import wraps
 
 """
@@ -21,7 +21,7 @@ Must do all before getting it public
 
 
 class Scope:
-    def __init__(self, name: str = LANGUAGE, debug: bool = None, secure: bool = True):
+    def __init__(self, name: str = LANGUAGE, debug: Optional[bool] = None, secure: bool = True):
         self.name = name
         self.self = self
         self.scope_stack: list[dict[str, Any]] = [construct_scope(self.name)]
@@ -88,7 +88,7 @@ class Scope:
 
         return step
 
-    def pop_exact(self, path: tuple[str], root: dict[str, Any] = None) -> dict[str, Any]:
+    def pop_exact(self, path: tuple[str], root: Optional[dict[str, Any]] = None) -> dict[str, Any]:
         branch = root
         for i, name in enumerate(path[:-1]):
             if name not in branch:
@@ -249,10 +249,9 @@ class Scope:
                                 f"{repr(options)}")
         node[RELATIVE_ATTRIBUTE] = options[next_value]
 
-    def restrict(self, pathname: str, restrictions: tuple[str], __scope__=None):
+    def restrict(self, pathname: str, restrictions: tuple[str, ...], __scope__=None):
         node = self.get(pathname, __scope__=__scope__)
         assert is_node(node), "Cannot restrict an attribute or a non-node"
-        restrictions = tuple(restrictions)
         if RESTRICTIONS_ATTRIBUTE in node:
             node[RESTRICTIONS_ATTRIBUTE] = tuple(set(restrictions + tuple(node[RESTRICTIONS_ATTRIBUTE])))
         else:
@@ -270,7 +269,7 @@ class Scope:
 # DECORATORS
 
 
-def scoped(scope_name: str = None, refs: dict[str, Any] = None):
+def scoped(scope_name: Optional[str] = None, refs: Optional[list[dict[str, Any]]] = None):
     """
     Decorator used for executing functions in scope contexts.
     :param scope_name: Name of the scope
