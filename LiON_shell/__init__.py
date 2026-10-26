@@ -3,7 +3,7 @@ from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.styles import Style, merge_styles
 from prompt_toolkit.patch_stdout import patch_stdout
 from pygments.formatters import Terminal256Formatter
-from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.completion import Completer, Completion
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.formatted_text import HTML
@@ -53,6 +53,50 @@ lion_lexer_cls = LiONLexer()
 
 class ImpossibleError(ParsingError):
     pass
+
+
+class NodeCompleter(Completer):
+    def __init__(self, root):
+        self.root = root
+
+    @staticmethod
+    def _children(node):
+        if not isinstance(node, dict):
+            return {}
+
+        children = dict(node)
+        relative = node.get(RELATIVE_ATTRIBUTE)
+        if isinstance(relative, dict):
+            children.update(relative)
+        return children
+
+    @staticmethod
+    def _get_child(node, name):
+        if not isinstance(node, dict):
+            return None
+        child = node.get(name)
+        if child is None and is_node(node):
+            relative = node.get(RELATIVE_ATTRIBUTE)
+            if isinstance(relative, dict):
+                child = relative.get(name)
+        return child
+
+    def get_completions(self, document, complete_event):
+        text = document.text_before_cursor
+        token = text.rsplit(None, 1)[-1]
+        parts = token.split('.')
+        parent_parts = parts[:-1]
+        prefix = parts[-1]
+
+        parent = self.root
+        for part in parent_parts:
+            parent = self._get_child(parent, part)
+            if not isinstance(parent, dict):
+                return
+
+        for name in self._children(parent):
+            if name.lower().startswith(prefix.lower()):
+                yield Completion(name, start_position=-len(prefix))
 
 
 class LSI(LiONStandard):
@@ -173,7 +217,7 @@ class LSI(LiONStandard):
 
         running = True
         history = InMemoryHistory()
-        completer = WordCompleter([str(k) for k in self.get_root()])
+        completer = NodeCompleter(self.get_root())
         lion_lexer = PygmentsLexer(LiONLexer)
         session = PromptSession(
             history=history,
@@ -188,7 +232,6 @@ class LSI(LiONStandard):
 
         while running:
             exptype = ImpossibleError if self[THROW_ERRORS][RELATIVE_ATTRIBUTE] else Exception
-            completer.words = [str(k) for k in self.get_root()]
             session.bottom_toolbar = self.bottom_toolbar if self.shell_config_module["__bar__"] else None
             try:
                 user_input = self.prompt(session, self.get_message())
