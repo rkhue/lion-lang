@@ -1,0 +1,11 @@
+# Render simple-page.lml with values supplied through the refs parameter.
+import @std/lml.py
+
+lml.run file @samples/simple-page.lml -> (
+    refs: (
+        title: "My LiON Page",
+        heading: "Welcome!",
+        message: "This page was generated from an LML template.",
+        year: 2026
+    )
+)

@@ -41,7 +41,7 @@ def lml_compile_code(code: str, refs: dict[str, Any]) -> LMLCompiler:
 
 
 def lml_compile_file(filepath: str, refs: dict[str, Any]):
-    content = funclib.loadRaw(filepath)
+    content = funclib.loadRaw(parent_parser.dms.parse(filepath))
     return lml_compile_code(content, refs)
 
 
